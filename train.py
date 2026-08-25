@@ -20,6 +20,7 @@ pd.set_option('display.float_format', lambda x: '%.5f' % x)
 import sys
 import matplotlib.pyplot as plt
 import time
+from adan import Adan
 
 from linear_transformer import Transformer_F, attention, generate_data, in_context_loss, generate_data_inplace
 
@@ -42,11 +43,11 @@ hist_stride = 1
 
 # We vary the following parameters
 n_layer = 3
-mode = 'normal'
+modes = ['normal', 'sphere', 'gamma']
 N = 20
 seeds = [0,1,2,3,4,5]
-algos = ['sgd','adam']
-lrs = [0.02]
+algos = ['sgd','adam', 'adan']
+lrs = [1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 1e-1] #[0.02]
 # pipe output to log file
 log_dir = 'log' 
 os.makedirs(log_dir, exist_ok=True)
@@ -64,55 +65,58 @@ def clip_and_step(allparam, optimizer, toclip, clip_threshold = 1.):
     return norm_p.item()
 ## Train linear transformer
 
-for alg in algos:
-    for toclip in [True]: # True means with clipping, False means without clipping
-        for lr in lrs:
-            for sd in seeds:
-                filename = filename_format.format(n_layer, N, mode, alg, toclip, lr, sd)
-                print(filename)
-                np.random.seed(sd)
-                torch.manual_seed(sd)
-                hist_list = list()
+for mode in modes:
+    for alg in algos:
+        for toclip in [True]: # True means with clipping, False means without clipping
+            for lr in lrs:
+                for sd in seeds:
+                    filename = filename_format.format(n_layer, N, mode, alg, toclip, lr, sd)
+                    print(filename)
+                    np.random.seed(sd)
+                    torch.manual_seed(sd)
+                    hist_list = list()
 
-                # initialize model paramter
-                model = Transformer_F(n_layer, n_head, d, var)
-                model.to(device)
+                    # initialize model paramter
+                    model = Transformer_F(n_layer, n_head, d, var)
+                    model.to(device)
 
-                # create optimizer
-                if alg == 'sgd':
-                    optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=0)
-                elif alg == 'adam':
-                    optimizer = torch.optim.AdamW(model.parameters(), lr=lr, betas=(0.9, 0.9), weight_decay=0)
-                else: assert False
+                    # create optimizer
+                    if alg == 'sgd':
+                        optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=0)
+                    elif alg == 'adam':
+                        optimizer = torch.optim.AdamW(model.parameters(), lr=lr, betas=(0.9, 0.9), weight_decay=0)
+                    elif alg == 'adan':
+                        optimizer = Adan(model.parameters(), lr=lr, betas=(0.98, 0.92, 0.99), weight_decay=0.0, max_grad_norm=0.0)
+                    else: assert False
 
-                for t in range(max_iters):
-                    start = time.time()
-                    # save model parameters
-                    if t%hist_stride ==0:
-                        hist_list.append(model.allparam.clone().detach())
+                    for t in range(max_iters):
+                        start = time.time()
+                        # save model parameters
+                        if t%hist_stride ==0:
+                            hist_list.append(model.allparam.clone().detach())
 
-                    #  generate a new batch of training set
-                    Z, y = generate_data(mode,N,d,B,shape_k)
-                    Z = Z.to(device)
-                    y = y.to(device)
+                        #  generate a new batch of training set
+                        Z, y = generate_data(mode,N,d,B,shape_k)
+                        Z = Z.to(device)
+                        y = y.to(device)
 
-                    loss = in_context_loss(model, Z, y)
-                    loss_value = loss.item()
-                    loss.backward()
+                        loss = in_context_loss(model, Z, y)
+                        loss_value = loss.item()
+                        loss.backward()
 
-                    if mode == 'sphere':
-                        clip_threshold = 0.1
-                    else:
-                        clip_threshold = 1.0
+                        if mode == 'sphere':
+                            clip_threshold = 0.1
+                        else:
+                            clip_threshold = 1.0
 
-                    # take optimizer step
-                    norms = clip_and_step(model.allparam, optimizer,toclip,clip_threshold)
-                    optimizer.zero_grad()
+                        # take optimizer step
+                        norms = clip_and_step(model.allparam, optimizer,toclip,clip_threshold)
+                        optimizer.zero_grad()
+                        
+                        end=time.time()
+                        if t%100 ==0 or t<5:
+                            print('iter {} | Loss: {}  time: {}  gradnorm: {}'.format(t,loss_value, end-start, norms))
                     
-                    end=time.time()
-                    if t%100 ==0 or t<5:
-                        print('iter {} | Loss: {}  time: {}  gradnorm: {}'.format(t,loss_value, end-start, norms))
-                
-                torch.save({'hist_list':hist_list}, filename)
+                    torch.save({'hist_list':hist_list}, filename)
 sys.stdout = sys.__stdout__
 f.close()

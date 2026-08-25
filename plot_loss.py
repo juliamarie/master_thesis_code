@@ -51,7 +51,8 @@ log_dir = 'log'
 loss_plots = {}
 
 for sd in seeds:
-    for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02)]:  
+    for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02),('adan', True, 0.02)]:  
+        print("first looop")
         filename = log_dir + '/train_layer{}_N{}_{}_{}_{}_lr{}_sd{}.pth'.format(n_layer, N, mode, alg, toclip, lr, sd)
         loaded_dict = torch.load(filename)
         hist_list = loaded_dict['hist_list']
@@ -80,7 +81,8 @@ os.makedirs(fig_dir, exist_ok=True)
 
 fig, ax = plt.subplots(1, 1,figsize = (6, 6))
 
-for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02)]:
+for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02),('adan', True, 0.02)]:
+    print("second loop")
     losses = torch.zeros(len(seeds), int(max_iters/stride))
     for idx, sd in enumerate(seeds):
         losses[idx] = loss_plots[(alg, toclip, lr, sd)]
@@ -92,6 +94,9 @@ for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02)]:
     elif alg == 'adam':
         ax.plot(range(0,max_iters,stride), losses_mean, color = 'red', lw = 3, label='Adam')
         ax.fill_between(range(0,max_iters,stride), losses_mean-losses_std/4, losses_mean+losses_std/4, color = 'red', alpha = 0.1)
+    elif alg == 'adan':
+        ax.plot(range(0,max_iters,stride), losses_mean, color = 'blue', lw = 3, label='Adan')
+        ax.fill_between(range(0,max_iters,stride), losses_mean-losses_std/4, losses_mean+losses_std/4, color = 'blue', alpha = 0.1)
 
     ax.set_xlabel('Iteration',fontsize=40)
     ax.tick_params(axis='both', which='major', labelsize=30, width = 3, length = 10)
@@ -104,4 +109,4 @@ for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02)]:
     
     plt.tight_layout()
     plt.savefig(fig_dir + '/loss_layer{}_N{}_{}.pdf'.format(n_layer, N, mode), dpi=600)
-    plt.show()
+    #plt.show()
