@@ -44,69 +44,71 @@ stride = 50 # stride for computing loss
 
 # We vary the following parameters
 n_layer = 3
-mode = 'normal'
+modes = ['normal', 'sphere', 'gamma']
 N = 20
 seeds = [0,1,2,3,4,5]
 log_dir = 'log'
 loss_plots = {}
 
-for sd in seeds:
-    for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02),('adan', True, 0.02)]:  
-        print("first looop")
-        filename = log_dir + '/train_layer{}_N{}_{}_{}_{}_lr{}_sd{}.pth'.format(n_layer, N, mode, alg, toclip, lr, sd)
-        loaded_dict = torch.load(filename)
-        hist_list = loaded_dict['hist_list']
+lrs = [1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 1e-1]
 
-        np.random.seed(99)
-        torch.manual_seed(99)
-        Z, y = generate_data(mode,N,d,B,shape_k)
-        Z = Z.to(device)
-        y = y.to(device)
+for lr in lrs:
+    for mode in modes:
+        for sd in seeds:
+            for (alg, toclip) in [('sgd', True),('adam', True),('adan', True)]:  
+                print("first looop")
+                filename = log_dir + '/train_layer{}_N{}_{}_{}_{}_lr{}_sd{}.pth'.format(n_layer, N, mode, alg, toclip, lr, sd)
+                loaded_dict = torch.load(filename)
+                hist_list = loaded_dict['hist_list']
 
-        model = Transformer_F(n_layer, n_head, d, var)
-        model = model.to(device)
-        
-        test_losses = torch.zeros(max_iters//stride)
+                np.random.seed(99)
+                torch.manual_seed(99)
+                Z, y = generate_data(mode,N,d,B,shape_k)
+                Z = Z.to(device)
+                y = y.to(device)
 
-        for t in range(0,max_iters,stride):
-            allparam_loaded = hist_list[t]
-            with torch.no_grad():
-                model.allparam.copy_(allparam_loaded)
-            test_loss = in_context_loss(model, Z, y)
-            test_losses[t//stride] = test_loss.item()
+                model = Transformer_F(n_layer, n_head, d, var)
+                model = model.to(device)
+                
+                test_losses = torch.zeros(max_iters//stride)
 
-        loss_plots[(alg, toclip, lr, sd)] = test_losses
-fig_dir = 'figures' 
+                for t in range(0,max_iters,stride):
+                    allparam_loaded = hist_list[t]
+                    with torch.no_grad():
+                        model.allparam.copy_(allparam_loaded)
+                    test_loss = in_context_loss(model, Z, y)
+                    test_losses[t//stride] = test_loss.item()
+
+                loss_plots[(alg, toclip, lr, sd, mode)] = test_losses
+    fig_dir = 'figures' 
 os.makedirs(fig_dir, exist_ok=True)
 
-fig, ax = plt.subplots(1, 1,figsize = (6, 6))
 
-for (alg, toclip, lr) in [('sgd', True, 0.02),('adam', True, 0.02),('adan', True, 0.02)]:
-    print("second loop")
-    losses = torch.zeros(len(seeds), int(max_iters/stride))
-    for idx, sd in enumerate(seeds):
-        losses[idx] = loss_plots[(alg, toclip, lr, sd)]
-    losses_mean = torch.mean(losses, axis=0)
-    losses_std = torch.std(losses, axis=0)
-    if alg == 'sgd':
-        ax.plot(range(0,max_iters,stride), losses_mean, color = 'black', lw = 3,label='SGDM')
-        ax.fill_between(range(0,max_iters,stride), losses_mean-losses_std/4, losses_mean+losses_std/4, color = 'black', alpha = 0.1)
-    elif alg == 'adam':
-        ax.plot(range(0,max_iters,stride), losses_mean, color = 'red', lw = 3, label='Adam')
-        ax.fill_between(range(0,max_iters,stride), losses_mean-losses_std/4, losses_mean+losses_std/4, color = 'red', alpha = 0.1)
-    elif alg == 'adan':
-        ax.plot(range(0,max_iters,stride), losses_mean, color = 'blue', lw = 3, label='Adan')
-        ax.fill_between(range(0,max_iters,stride), losses_mean-losses_std/4, losses_mean+losses_std/4, color = 'blue', alpha = 0.1)
 
-    ax.set_xlabel('Iteration',fontsize=40)
-    ax.tick_params(axis='both', which='major', labelsize=30, width = 3, length = 10)
-    ax.tick_params(axis='both', which='minor', labelsize=20, width = 3, length = 5)
-    ax.legend(fontsize=30)
-    ax.spines[['right', 'top']].set_visible(False)
-    ax.spines['left'].set_linewidth(3)
-    ax.spines['bottom'].set_linewidth(3)
-    ax.set_yscale('log')
-    
-    plt.tight_layout()
-    plt.savefig(fig_dir + '/loss_layer{}_N{}_{}.pdf'.format(n_layer, N, mode), dpi=600)
-    #plt.show()
+for mode in modes:
+    for (alg, toclip) in [('sgd', True),('adam', True),('adan', True)]:
+        fig, ax = plt.subplots(1, 1,figsize = (6, 6))
+        for lr in lrs:
+            print("second loop")
+            losses = torch.zeros(len(seeds), int(max_iters/stride))
+            for idx, sd in enumerate(seeds):
+                losses[idx] = loss_plots[(alg, toclip, lr, sd, mode)]
+            losses_mean = torch.mean(losses, axis=0)
+            losses_std = torch.std(losses, axis=0)
+            
+            ax.plot(range(0,max_iters,stride), losses_mean, lw = 3, label=f'lr={lr}')
+            ax.fill_between(range(0,max_iters,stride), losses_mean-losses_std/4, losses_mean+losses_std/4, alpha = 0.1)
+
+        ax.set_xlabel('Iteration',fontsize=40)
+        ax.tick_params(axis='both', which='major', labelsize=30, width = 3, length = 10)
+        ax.tick_params(axis='both', which='minor', labelsize=20, width = 3, length = 5)
+        ax.legend(fontsize=10)
+        ax.spines[['right', 'top']].set_visible(False)
+        ax.spines['left'].set_linewidth(3)
+        ax.spines['bottom'].set_linewidth(3)
+        ax.set_yscale('log')
+            
+        plt.tight_layout()
+        plt.savefig(fig_dir + '/loss_layer{}_N{}_{}_{}.pdf'.format(n_layer, N, mode, alg), dpi=600)
+        plt.close(fig)
+        #plt.show()
