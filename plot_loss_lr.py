@@ -89,6 +89,9 @@ for mode in modes:
     for (alg, toclip) in [('sgd', True),('adam', True),('adan', True)]:
         fig, ax = plt.subplots(1, 1,figsize = (6, 6))
         for lr in lrs:
+            if(mode == 'gamma'):
+                if(lr==0.1 or lr==0.05):
+                    continue
             print("second loop")
             losses = torch.zeros(len(seeds), int(max_iters/stride))
             for idx, sd in enumerate(seeds):
