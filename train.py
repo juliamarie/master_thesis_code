@@ -47,7 +47,7 @@ modes = ['normal', 'sphere', 'gamma']
 N = 20
 seeds = [0,1,2,3,4,5]
 algos = ['sgd','adam', 'adan']
-lrs = [1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 1e-1] #[0.02]
+lrs = [0.1, 0.2, 0.5]#[1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 1e-1] #[0.02]
 # pipe output to log file
 log_dir = 'log' 
 os.makedirs(log_dir, exist_ok=True)
