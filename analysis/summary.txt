@@ -1,0 +1,109 @@
+C:\Users\juli1\Documents\Uni\MT\master_thesis_code\analysis\analyze.py:93: RuntimeWarning: Mean of empty slice
+  fin = np.nanmean(L[..., -int(FINAL_FRAC * steps):], axis=-1)
+
+=== INDUCTION HEADS ===
+    p  L  h |        AdamW best |         Adan best |  diff (adan-adamw) | Welch p | #LR<=5% gap (AdamW/Adan)
+  0.5  2  1 | 2.427 @ lr=0.0002 | 2.425 @ lr=0.0005 |             -0.002 |   0.894 |  2 /  2
+  0.5  2  2 | 2.431 @ lr=0.0002 | 2.424 @ lr=0.0005 |             -0.007 |   0.000 |  3 /  4
+  0.5  2  4 | 2.430 @ lr=0.005  | 2.431 @ lr=0.005  |             +0.001 |   0.368 |  2 /  3
+  0.5  2  8 | 2.431 @ lr=0.005  | 2.435 @ lr=0.005  |             +0.005 |   0.385 |  3 /  3
+  0.5  4  1 | 2.422 @ lr=0.0002 | 2.422 @ lr=0.0005 |             +0.000 |   0.988 |  6 /  5
+  0.5  4  2 | 2.422 @ lr=0.0002 | 2.422 @ lr=0.0005 |             +0.000 |   0.925 |  6 /  6
+  0.5  4  4 | 2.422 @ lr=0.0002 | 2.424 @ lr=0.0005 |             +0.002 |   0.038 |  5 /  5
+  0.5  4  8 | 2.427 @ lr=0.002  | 2.428 @ lr=0.005  |             +0.001 |   0.948 |  5 /  3
+  0.5  5  1 | 2.422 @ lr=0.0002 | 2.422 @ lr=0.0005 |             -0.000 |   0.756 |  5 /  6
+  0.5  5  2 | 2.424 @ lr=0.0002 | 2.422 @ lr=0.0005 |             -0.001 |   0.443 |  6 /  6
+  0.5  5  4 | 2.424 @ lr=0.002  | 2.424 @ lr=0.01   |             -0.000 |   0.871 |  5 /  7
+  0.5  5  8 | 2.427 @ lr=0.002  | 2.427 @ lr=0.005  |             +0.000 |   0.878 |  6 /  4
+  0.8  2  1 | 1.500 @ lr=0.0005 | 1.496 @ lr=0.0005 |             -0.004 |   0.601 |  3 /  2
+  0.8  2  2 | 1.497 @ lr=0.0005 | 1.494 @ lr=0.0005 |             -0.003 |   0.173 |  3 /  5
+  0.8  2  4 | 1.515 @ lr=0.0002 | 1.502 @ lr=0.01   |             -0.013 |   0.060 |  2 /  3
+  0.8  2  8 | 1.513 @ lr=0.005  | 1.507 @ lr=0.01   |             -0.006 |   0.457 |  4 /  4
+  0.8  4  1 | 1.490 @ lr=0.0005 | 1.489 @ lr=0.001  |             -0.000 |   0.516 |  6 /  7
+  0.8  4  2 | 1.490 @ lr=0.0005 | 1.489 @ lr=0.001  |             -0.001 |   0.292 |  7 /  7
+  0.8  4  4 | 1.489 @ lr=0.0005 | 1.490 @ lr=0.001  |             +0.001 |   0.198 |  7 /  7
+  0.8  4  8 | 1.492 @ lr=0.002  | 1.493 @ lr=0.005  |             +0.000 |   0.876 |  8 /  6
+  0.8  5  1 | 1.489 @ lr=0.0005 | 1.489 @ lr=0.001  |             +0.000 |   0.702 |  6 /  8
+  0.8  5  2 | 1.489 @ lr=0.0005 | 1.490 @ lr=0.001  |             +0.000 |   0.650 |  6 /  8
+  0.8  5  4 | 1.490 @ lr=0.0005 | 1.492 @ lr=0.0005 |             +0.002 |   0.271 |  7 /  7
+  0.8  5  8 | 1.492 @ lr=0.002  | 1.492 @ lr=0.005  |             -0.000 |   0.531 |  8 /  7
+ 0.95  2  1 | 0.720 @ lr=0.0002 | 0.905 @ lr=0.005  |             +0.185 |   0.000 |  2 /  0
+ 0.95  2  2 | 0.842 @ lr=0.005  | 0.717 @ lr=0.02   |             -0.125 |   0.170 |  0 /  1
+ 0.95  2  4 | 0.707 @ lr=0.005  | 0.713 @ lr=0.02   |             +0.007 |   0.080 |  5 /  4
+ 0.95  2  8 | 0.707 @ lr=0.002  | 0.708 @ lr=0.01   |             +0.001 |   0.664 |  5 /  3
+ 0.95  4  1 | 0.703 @ lr=0.001  | 0.703 @ lr=0.002  |             +0.000 |   0.544 |  7 /  8
+ 0.95  4  2 | 0.702 @ lr=0.001  | 0.703 @ lr=0.002  |             +0.000 |   0.907 |  7 /  8
+ 0.95  4  4 | 0.702 @ lr=0.001  | 0.702 @ lr=0.002  |             +0.000 |   0.985 |  8 /  7
+ 0.95  4  8 | 0.703 @ lr=0.001  | 0.702 @ lr=0.005  |             -0.001 |   0.256 |  7 /  6
+ 0.95  5  1 | 0.703 @ lr=0.001  | 0.703 @ lr=0.0005 |             -0.000 |   0.415 |  7 /  8
+ 0.95  5  2 | 0.702 @ lr=0.0005 | 0.703 @ lr=0.0005 |             +0.001 |   0.078 |  7 /  8
+ 0.95  5  4 | 0.703 @ lr=0.001  | 0.702 @ lr=0.005  |             -0.000 |   0.230 |  7 /  7
+ 0.95  5  8 | 0.702 @ lr=0.0005 | 0.702 @ lr=0.005  |             -0.000 |   0.640 |  7 /  6
+Adan lower tuned loss in 17/36 settings; significant (p<0.05) differences: 3
+total #good LRs  AdamW=190  Adan=191
+centre of good-LR window: Adan / AdamW = x2.31 (geo-mean over settings)
+
+failed runs, summed over all 36 settings (diverged = non-finite loss; failed = stable but excess loss > 0.5 of the gap):
+             lr: 0.0001 0.0002 0.0005  0.001  0.002  0.005   0.01   0.02   0.05    0.1    0.2
+   AdamW  diverged      0      0      0      0      0      0      0      0      0      0      2   (of 216 runs per LR)
+   AdamW  failed       20      0     24     24     26     14     56    159    216    216    214   (of 216 runs per LR)
+   Adan   diverged      0      0      0      0      0      0      0      0      0      0      0   (of 216 runs per LR)
+   Adan   failed      125     22     12     24     25      4      5     43    199    216    216   (of 216 runs per LR)
+
+=== LINEAR TRANSFORMER (3 layers, N=20, d=5; test loss on fixed eval batch) ===
+-- normal: best overall median final loss 8.51e-04
+   SGD (mom.)  best 8.93e-04 @ lr=0.2     | #LRs within x1.5/x2/x5 of best-overall: [2, 2, 2]
+   AdamW       best 1.14e-03 @ lr=0.002   | #LRs within x1.5/x2/x5 of best-overall: [1, 5, 6]
+   Adan        best 8.51e-04 @ lr=0.002   | #LRs within x1.5/x2/x5 of best-overall: [3, 6, 7]
+   AdamW vs Adan at their best LR: Welch p = 0.000
+   diverged seeds (final loss > initial loss, or non-finite); "non-finite" = the NaN/inf subset:
+             lr: 0.0001 0.0002 0.0005  0.001  0.002  0.005   0.01   0.02   0.05    0.1    0.2    0.5
+   SGD (mom.) diverged      0      0      0      0      0      0      0      0      0      0      0      6   (of 6 runs per LR)
+   SGD (mom.) non-finite     0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+   AdamW  diverged      0      0      0      0      0      0      0      0      0      0      0      6   (of 6 runs per LR)
+   AdamW  non-finite     0      0      0      0      0      0      0      0      0      0      0      2   (of 6 runs per LR)
+   Adan   diverged      0      0      0      0      0      0      0      0      0      0      0      2   (of 6 runs per LR)
+   Adan   non-finite     0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+-- sphere: best overall median final loss 1.57e-05
+   SGD (mom.)  best 9.87e-04 @ lr=0.5     | #LRs within x1.5/x2/x5 of best-overall: [0, 0, 0]
+   AdamW       best 2.05e-05 @ lr=0.02    | #LRs within x1.5/x2/x5 of best-overall: [1, 3, 5]
+   Adan        best 1.57e-05 @ lr=0.05    | #LRs within x1.5/x2/x5 of best-overall: [4, 5, 5]
+   AdamW vs Adan at their best LR: Welch p = 0.000
+   diverged seeds (final loss > initial loss, or non-finite); "non-finite" = the NaN/inf subset:
+             lr: 0.0001 0.0002 0.0005  0.001  0.002  0.005   0.01   0.02   0.05    0.1    0.2    0.5
+   SGD (mom.) diverged      0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+   SGD (mom.) non-finite     0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+   AdamW  diverged      0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+   AdamW  non-finite     0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+   Adan   diverged      0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+   Adan   non-finite     0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+-- gamma: best overall median final loss 2.41e-01
+   SGD (mom.)  best 3.56e-01 @ lr=0.05    | #LRs within x1.5/x2/x5 of best-overall: [1, 3, 9]
+   AdamW       best 2.42e-01 @ lr=0.01    | #LRs within x1.5/x2/x5 of best-overall: [4, 6, 9]
+   Adan        best 2.41e-01 @ lr=0.02    | #LRs within x1.5/x2/x5 of best-overall: [6, 8, 11]
+   AdamW vs Adan at their best LR: Welch p = 0.549
+   diverged seeds (final loss > initial loss, or non-finite); "non-finite" = the NaN/inf subset:
+             lr: 0.0001 0.0002 0.0005  0.001  0.002  0.005   0.01   0.02   0.05    0.1    0.2    0.5
+   SGD (mom.) diverged      0      0      0      0      0      0      0      0      0      4      6      6   (of 6 runs per LR)
+   SGD (mom.) non-finite     0      0      0      0      0      0      0      0      0      0      0      5   (of 6 runs per LR)
+   AdamW  diverged      0      0      0      0      0      0      0      0      1      6      6      6   (of 6 runs per LR)
+   AdamW  non-finite     0      0      0      0      0      0      0      0      0      0      0      6   (of 6 runs per LR)
+   Adan   diverged      0      0      0      0      0      0      0      0      0      0      0      5   (of 6 runs per LR)
+   Adan   non-finite     0      0      0      0      0      0      0      0      0      0      0      0   (of 6 runs per LR)
+
+=== INDUCTION: SPEED (steps until the 100-step moving average reaches the target) ===
+target = floor + 50% of gap: Adan faster in 8/36, AdamW faster in 28, tie 0 | steps Adan/AdamW = x1.16 (geo-mean, 36 settings) | never reached: AdamW 0, Adan 0
+target = floor + 20% of gap: Adan faster in 8/36, AdamW faster in 28, tie 0 | steps Adan/AdamW = x1.24 (geo-mean, 36 settings) | never reached: AdamW 0, Adan 0
+target = floor + 5% of gap: Adan faster in 11/36, AdamW faster in 25, tie 0 | steps Adan/AdamW = x1.13 (geo-mean, 34 settings) | never reached: AdamW 1, Adan 1
+
+=== LINEAR TRANSFORMER: SPEED (iterations until the smoothed test loss reaches k x best final loss) ===
+-- normal (best final loss 8.51e-04)
+   target 100x best: SGD (mom.)    200 @ lr=0.05   | AdamW    200 @ lr=0.02   | Adan    200 @ lr=0.05  
+   target  10x best: SGD (mom.)    725 @ lr=0.2    | AdamW    300 @ lr=0.05   | Adan    250 @ lr=0.2   
+   target   2x best: SGD (mom.)   3900 @ lr=0.2    | AdamW    550 @ lr=0.05   | Adan    825 @ lr=0.2   
+-- sphere (best final loss 1.57e-05)
+   target 100x best: SGD (mom.)   5775 @ lr=0.5    | AdamW    275 @ lr=0.2    | Adan    300 @ lr=0.5   
+   target  10x best: SGD (mom.)  never            | AdamW    775 @ lr=0.1    | Adan   1300 @ lr=0.2   
+   target   2x best: SGD (mom.)  never            | AdamW   1900 @ lr=0.05   | Adan   2000 @ lr=0.2   
+-- gamma (best final loss 2.41e-01)
+   target   2x best: SGD (mom.)   1000 @ lr=0.05   | AdamW    300 @ lr=0.05   | Adan    250 @ lr=0.1   
