@@ -136,7 +136,10 @@ def induction():
                 ax = axes[iL, ih]
                 sweep_panel(ax, lrs, fin[ip, ih, iL], algs, div[ip, ih, iL], floor=floors[ip],
                             failed=failed[ip, ih, iL])
-                ax.set_title(f'{Ly} layers, {h} heads', fontsize=9)
+                if h==1:
+                    ax.set_title(f'{Ly} layers, {h} head', fontsize=9)
+                else:
+                    ax.set_title(f'{Ly} layers, {h} heads', fontsize=9)
                 if iL == len(layers) - 1:
                     ax.set_xlabel('learning rate')
                 if ih == 0:
@@ -392,7 +395,10 @@ def induction_speed():
                         b = np.argmin(m)
                         ax.plot(lrs[b], m[b], '*', color=COL[alg], ms=11, mec='white', mew=0.8, zorder=5)
                 ax.set_xscale('log')
-                ax.set_title(f'{Ly} layers, {h} heads', fontsize=9)
+                if h==1:
+                    ax.set_title(f'{Ly} layers, {h} head', fontsize=9)
+                else:
+                    ax.set_title(f'{Ly} layers, {h} heads', fontsize=9)
                 if iL == len(layers) - 1:
                     ax.set_xlabel('learning rate')
                 if ih == 0:
