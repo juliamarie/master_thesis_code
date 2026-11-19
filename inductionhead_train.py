@@ -208,7 +208,7 @@ def make_model(cfg, device, seed=1234):
 
 
 def build_optimizer(name, model, lr, wd):
-    # standard practice: no weight decay on biases / norms / embeddings
+    # standard practice: no weight decay on biases / norms 
     decay, no_decay = [], []
     for n, p in model.named_parameters():
         (no_decay if p.ndim < 2 else decay).append(p)
@@ -263,7 +263,7 @@ def main():
 
     seeds = [0,1,2,3,4,5]
     algos = ['adamw', 'adan']
-    lrs = [1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 0.1, 0.2] #[0.02]
+    lrs = [1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 0.1, 0.2, 0.5] #[0.02]
     n_heads = [1, 2, 4, 8]
     n_layers=[2,4,5]
     p_reps=[0.50, 0.80, 0.95]
